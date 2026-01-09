@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+
 :root{
   --bg-0: #0b0710;
   --bg-1: #1b0f26;
@@ -8,8 +10,6 @@
   --accent-b: #9b7cff;
   --accent-c: #56f1d3;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
 
 *{box-sizing:border-box}
 html,body,#root{height:100%}
