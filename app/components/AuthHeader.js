@@ -7,6 +7,7 @@ import { usePathname, useRouter } from 'next/navigation'
 export default function AuthHeader({ initialSignedIn = false }){
   const pathname = usePathname()
   const isAuthRoute = pathname && (pathname.startsWith('/signup') || pathname.startsWith('/signin'))
+  const isHome = pathname === '/' || pathname === '' || pathname == null
   // `signedIn` starts as `null` when unknown during hydration —
   // this prevents showing the wrong links on first paint.
   const [signedIn, setSignedIn] = useState(initialSignedIn ? true : null)
@@ -106,10 +107,13 @@ export default function AuthHeader({ initialSignedIn = false }){
                 </>
               ) : (
                 // Not signed in: show Sign in / Sign up actions on the right
-                <>
-                  <Link href="/signin" className="nav-link">Sign in</Link>
-                  <Link href="/signup" className="btn btn-sm nav-cta" style={{background:'linear-gradient(90deg,#a4508b,#f7368e)',color:'#fff'}}>Sign up</Link>
-                </>
+                // Hide auth actions on the homepage because the CTA there already links to signup.
+                isHome ? null : (
+                  <>
+                    <Link href="/signin" className="nav-link">Sign in</Link>
+                    <Link href="/signup" className="btn btn-sm nav-cta" style={{background:'linear-gradient(90deg,#a4508b,#f7368e)',color:'#fff'}}>Sign up</Link>
+                  </>
+                )
               )}
             </div>
             {/* Dev debug badge: shows why header decided the auth state */}
