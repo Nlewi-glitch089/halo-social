@@ -299,6 +299,73 @@ Use this checklist to track your progress. All items must be completed and passi
   - [ ] Data flow arrows between components
 - [ ] Saved as image file in docs/ folder
 
+#### ASCII Architecture Diagram
+If you prefer a simple, text-based diagram (no Mermaid) include the following ASCII flow in the README so it's visible in plain text viewers and terminals:
+
+```
+┌────────────┐
+│    User    │
+└─────┬──────┘
+  │
+  │ interacts with UI
+  ▼
+┌──────────────────────────────┐
+│        Web App (Client)       │
+│  - Image generation UI        │
+│  - Gallery & sharing          │
+│  - Contextual color interface │
+└─────┬────────────────────────┘
+  │
+  │ sends prompt + session token
+  ▼
+┌──────────────────────────────┐
+│          Backend API          │
+│  - Authentication             │
+│  - Prompt processing          │
+│  - Request validation         │
+└─────┬──────────────┬─────────┘
+  │              │
+  │ reads/writes │ requests image generation
+  │ data         │
+  ▼              ▼
+┌──────────────┐   ┌──────────────────────────┐
+│   Database   │   │   AI Image Service        │
+│ - Users      │   │ - Prompt → image          │
+│ - Prompts    │   │ - Style & color context   │
+│ - Image meta │   └───────────┬──────────────┘
+└──────────────┘               │
+           │ returns generated image
+           ▼
+        ┌──────────────────────────┐
+        │       Image Storage       │
+        │ - Generated image files  │
+        │ - Public / private URLs  │
+        └───────────┬──────────────┘
+            │
+            │ returns image URL
+            ▼
+         ┌─────────────────────────┐
+         │        Backend API       │
+         │ - Stores metadata        │
+         │ - Sends result to client │
+         └───────────┬─────────────┘
+             │
+             │ sends image + URL
+             ▼
+┌──────────────────────────────┐
+│        Web App (Client)       │
+│ - Displays image              │
+│ - Download / share actions    │
+└───────────┬──────────────────┘
+    │
+    │ views & shares image
+    ▼
+    ┌────────────┐
+    │    User    │
+    └────────────┘
+```
+
+
 #### Data Flow Documentation (`docs/DATA-FLOW.md`)
 - [ ] Image generation flow documented (input → OpenAI → display)
 - [ ] Publishing flow documented (selection → database → confirmation)
