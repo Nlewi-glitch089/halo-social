@@ -54,7 +54,7 @@ export default function FeedPage() {
           <div style={{color:'var(--muted)',fontSize:13}}>See posts from the community</div>
         </div>
         <div>
-          <a href="/create" className="btn-primary" style={{padding:'8px 14px',borderRadius:10}}>Create</a>
+          {/* Create link removed — page already has Create actions elsewhere */}
         </div>
       </div>
 

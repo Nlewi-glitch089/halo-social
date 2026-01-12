@@ -20,7 +20,19 @@ export async function POST(req, { params }){
     const { id } = params
     const cookies = parseCookieHeader(req)
     const token = cookies['halo_token']
-    const userId = token ? tokens.get(token) : null
+    let userId = null
+    if (token) {
+      // Try DB-backed tokens first when Prisma configured
+      try {
+        const { getPrisma } = await import('../../../../../lib/prismaClient.mjs')
+        const prisma = await getPrisma()
+        const t = await prisma.token.findUnique({ where: { token } }).catch(() => null)
+        if (t) userId = t.userId
+      } catch (e) {
+        // ignore and fall back to in-memory map
+      }
+      if (!userId) userId = tokens.get(token)
+    }
     if(!userId) return NextResponse.json({ message: 'Not authenticated' }, { status: 401 })
 
     const idx = FEED.findIndex(i=>i.id === id)

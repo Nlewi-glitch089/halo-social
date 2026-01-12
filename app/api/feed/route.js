@@ -117,7 +117,18 @@ export async function GET(req) {
     const token = getCookie('halo_token')
     const tokens = global.__halo_tokens ||= new Map()
     const users = global.__halo_users ||= new Map()
-    const currentUserId = token ? tokens.get(token) : null
+    let currentUserId = null
+    if (token) {
+      try {
+        const { getPrisma } = await import('../../../lib/prismaClient.mjs')
+        const prisma = await getPrisma()
+        const t = await prisma.token.findUnique({ where: { token } }).catch(() => null)
+        if (t) currentUserId = t.userId
+      } catch (e) {
+        // ignore and fall back to in-memory
+      }
+      if (!currentUserId) currentUserId = tokens.get(token)
+    }
 
     const images = items.slice(start, start + limit).map(i => {
       const likedByCurrent = currentUserId ? (users.get(currentUserId)?.likes || []).includes(i.id) : false

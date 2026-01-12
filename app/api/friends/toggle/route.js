@@ -22,7 +22,18 @@ export async function POST(req){
 
     const cookies = parseCookieHeader(req)
     const token = cookies['halo_token']
-    const currentUserId = token ? tokens.get(token) : null
+    let currentUserId = null
+    if (token) {
+      try {
+        const { getPrisma } = await import('../../../../lib/prismaClient.mjs')
+        const prisma = await getPrisma()
+        const t = await prisma.token.findUnique({ where: { token } }).catch(() => null)
+        if (t) currentUserId = t.userId
+      } catch (e) {
+        // ignore, fall back to in-memory
+      }
+      if (!currentUserId) currentUserId = tokens.get(token)
+    }
     if(!currentUserId) return NextResponse.json({ message: 'Not authenticated' }, { status: 401 })
 
     const currentUser = users.get(currentUserId)

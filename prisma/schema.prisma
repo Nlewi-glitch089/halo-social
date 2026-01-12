@@ -15,3 +15,25 @@ model PublishedImage {
 
   @@map("published_images")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @default("")
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  tokens    Token[]
+
+  @@map("users")
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@map("tokens")
+}

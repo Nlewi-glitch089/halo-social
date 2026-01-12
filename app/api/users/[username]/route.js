@@ -23,7 +23,18 @@ export async function GET(req, { params }){
 
     const cookies = parseCookieHeader(req)
     const token = cookies['halo_token']
-    const currentUserId = token ? tokens.get(token) : null
+    let currentUserId = null
+    if (token) {
+      try {
+        const { getPrisma } = await import('../../../../lib/prismaClient.mjs')
+        const prisma = await getPrisma()
+        const t = await prisma.token.findUnique({ where: { token } }).catch(() => null)
+        if (t) currentUserId = t.userId
+      } catch (e) {
+        // ignore and fallback to in-memory
+      }
+      if (!currentUserId) currentUserId = tokens.get(token)
+    }
     const isFriend = currentUserId ? (users.get(currentUserId)?.friends || []).includes(user.username) : false
 
     // compute counts

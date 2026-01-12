@@ -8,8 +8,10 @@ export default function AuthHeader({ initialSignedIn = false }){
   const pathname = usePathname()
   const isAuthRoute = pathname && (pathname.startsWith('/signup') || pathname.startsWith('/signin'))
   const isHome = pathname === '/' || pathname === '' || pathname == null
-  // `signedIn` starts as `null` when unknown during hydration —
-  // this prevents showing the wrong links on first paint.
+  const isIntroPage = isHome || pathname?.startsWith('/why') || pathname?.startsWith('/features') || pathname?.startsWith('/about') || pathname?.startsWith('/docs')
+  // Use the server-provided `initialSignedIn` value for the initial state so
+  // server-rendered HTML matches the client on first paint. Client-side
+  // effects will reconcile `localStorage`/cookie state after hydration.
   const [signedIn, setSignedIn] = useState(initialSignedIn ? true : null)
   const router = useRouter()
   const [serverSession, setServerSession] = useState(null)
@@ -18,9 +20,11 @@ export default function AuthHeader({ initialSignedIn = false }){
     try {
       const fromStorage = Boolean(localStorage.getItem('halo_signed_in'))
       if (fromStorage) {
+        // reflect the client-side hint immediately to avoid UI flicker,
+        // but do NOT short-circuit the server session probe — we must
+        // validate the cookie/token with the server so the UI and server
+        // stay consistent (prevents 401s when the token is expired/cleared).
         setSignedIn(true)
-        setServerSession(true)
-        return
       }
       // quick client-side cookie check fallback (helps in some dev envs)
       try {
@@ -44,8 +48,10 @@ export default function AuthHeader({ initialSignedIn = false }){
             }
           }
         } catch (e) {}
+        // server does not consider this client signed in — clear client hint
+        try { localStorage.removeItem('halo_signed_in') } catch(e) {}
         setServerSession(false)
-        setSignedIn(Boolean(initialSignedIn))
+        setSignedIn(false)
       }
       checkSession()
     } catch(e) { setSignedIn(Boolean(initialSignedIn)) }
@@ -107,8 +113,8 @@ export default function AuthHeader({ initialSignedIn = false }){
                 </>
               ) : (
                 // Not signed in: show Sign in / Sign up actions on the right
-                // Hide auth actions on the homepage because the CTA there already links to signup.
-                isHome ? null : (
+                // Hide auth actions on intro pages because the CTA there already links to signup.
+                isIntroPage ? null : (
                   <>
                     <Link href="/signin" className="nav-link">Sign in</Link>
                     <Link href="/signup" className="btn btn-sm nav-cta" style={{background:'linear-gradient(90deg,#a4508b,#f7368e)',color:'#fff'}}>Sign up</Link>
@@ -116,12 +122,7 @@ export default function AuthHeader({ initialSignedIn = false }){
                 )
               )}
             </div>
-            {/* Dev debug badge: shows why header decided the auth state */}
-            <div style={{marginLeft:12,opacity:0.9,fontSize:12,color:'var(--muted)'}} aria-hidden>
-              <span style={{padding:6,borderRadius:8,background:'rgba(255,255,255,0.02)',marginRight:8}}>prop:{initialSignedIn?1:0}</span>
-              <span style={{padding:6,borderRadius:8,background:'rgba(255,255,255,0.02)',marginRight:8}}>doc:{typeof document!=='undefined' && document.cookie && document.cookie.includes('halo_token=')?1:0}</span>
-              <span style={{padding:6,borderRadius:8,background:'rgba(255,255,255,0.02)'}}>srv:{serverSession===null?'-':(serverSession?1:0)}</span>
-            </div>
+            {/* debug badges removed for production-like UI */}
           </nav>
         </div>
       </header>

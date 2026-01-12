@@ -7,3 +7,5 @@ coverage/
 /.idea
 /.vscode
 prisma/migrations/
+.vercel
+.env*.local

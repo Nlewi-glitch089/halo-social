@@ -26,6 +26,10 @@ body{
   color: #e9eef6;
 }
 
+/* Make layout use column flex so footer stays consistent across pages */
+body{display:flex;flex-direction:column;min-height:100vh}
+main{flex:1}
+
 .container{max-width:1100px;margin:0 auto;padding:28px 16px}
 
 /* Full-page gradient overlay (uniform ombre across the entire page) */
@@ -106,9 +110,11 @@ body{
 .nav-cta{padding:0;margin:0}
 
 /* Footer */
-.site-footer{border-top:1px solid rgba(255,255,255,0.02);padding:6px 0;margin-top:12px}
+.site-footer{border-top:1px solid rgba(255,255,255,0.02);padding:4px 0;margin-top:8px}
 .site-footer .footer-logo{display:flex;align-items:center}
-.site-footer .footer-meta{font-size:12px}
+.site-footer .footer-meta{font-size:11px;opacity:0.85}
+/* Reduce container padding specifically for the footer so the bottom area is compact */
+.site-footer .container{padding:6px 12px}
 
 
 .mosaic{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:6px}
@@ -170,8 +176,8 @@ body{
 .compare-list li{padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.02);color:var(--muted);display:flex;align-items:center;gap:10px}
 
 /* Final CTA block styling to create a clean finish */
-.final-cta{margin-top:28px;padding-top:20px;padding-bottom:20px;border-top:0;background:transparent}
-.final-cta-inner{max-width:920px;margin:0 auto;padding:18px 12px}
+.final-cta{margin-top:12px;padding-top:12px;padding-bottom:12px;border-top:0;background:transparent}
+.final-cta-inner{max-width:920px;margin:0 auto;padding:12px 10px}
 .final-cta .btn-primary{padding:14px 34px;font-size:16px;border-radius:14px}
 .final-cta h2{margin-bottom:6px}
 .check{width:18px;height:18px;border-radius:4px;background:linear-gradient(90deg,var(--accent-a),var(--accent-b));display:inline-block}

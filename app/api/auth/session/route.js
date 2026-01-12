@@ -14,7 +14,27 @@ export async function GET() {
         hasToken = Boolean(cookieStore['halo_token']?.value ?? cookieStore['halo_token'])
       }
     }
-    return NextResponse.json({ signedIn: Boolean(hasToken) })
+    // If a token exists, try to confirm it exists in the DB (if configured) or in-memory tokens
+    if (hasToken) {
+      const cookieVal = (typeof cookieStore.get === 'function') ? cookieStore.get('halo_token')?.value : (cookieStore['halo_token']?.value ?? cookieStore['halo_token'])
+      if (cookieVal) {
+        // Try DB validation first
+        try {
+          const { getPrisma } = await import('../../../../lib/prismaClient.mjs')
+          const prisma = await getPrisma()
+          const t = await prisma.token.findUnique({ where: { token: cookieVal } }).catch(()=>null)
+          if (t) return NextResponse.json({ signedIn: true })
+        } catch (e) {
+          // ignore and try in-memory below
+        }
+        // Fallback: check in-memory tokens map (dev)
+        try {
+          const tokens = global.__halo_tokens ||= new Map()
+          if (tokens.get(cookieVal)) return NextResponse.json({ signedIn: true })
+        } catch (e) {}
+      }
+    }
+    return NextResponse.json({ signedIn: false })
   } catch (err) {
     return NextResponse.json({ signedIn: false })
   }
