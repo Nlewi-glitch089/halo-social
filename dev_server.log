@@ -1,0 +1,38 @@
+nohup: ignoring input
+
+> halo-social@1.0.0 dev
+> next dev
+
+▲ Next.js 16.1.1 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.0.0.199:3000
+- Environments: .env.local, .env
+
+✓ Starting...
+✓ Ready in 13.5s
+ GET /api/debug/db 404 in 3.7s (compile: 3.4s, render: 257ms)
+ GET /signup 200 in 645ms (compile: 461ms, render: 184ms)
+Prisma poolUrl present, length: postgresql://neondb_owner:npg_fJolj4Nw8Y...
+Running on Windows; attempting Neon adapter first
+Windows: importing @neondatabase/serverless
+Windows: imported neon, createPool/PoolClass: undefined function
+Windows: importing @prisma/adapter-neon
+Windows: importing ws
+Windows: ws imported
+Windows: creating pool via PoolClass
+Windows: creating PrismaNeon adapter (PoolClass)
+Windows: constructing PrismaClient with neon adapter (PoolClass)
+Windows: constructed PrismaClient (PoolClass)
+Windows: skipping internal test query; returning constructed PrismaClient (PoolClass)
+ GET /api/auth/session 200 in 1394ms (compile: 735ms, render: 659ms)
+ENV check — TEST_DATABASE_URL present? false DATABASE_URL present? true db host: ep-plain-sound-ah0xldj7-pooler.c-3.us-east-1.aws.neon.tech
+Prisma signup error: No database host or connection string was set, and key parameters have default values (host: localhost, user: Launchpad8, db: Launchpad8, password: null). Is an environment variable missing? Alternatively, if you intended to connect with these parameters, please set the host to 'localhost' explicitly.
+pg: emailRes.rowCount -> 0
+Signup persistence: pg-fallback
+ POST /api/auth/signup 201 in 2.7s (compile: 229ms, render: 2.5s)
+ GET /api/debug/db 404 in 79ms (compile: 14ms, render: 65ms)
+ENV check — TEST_DATABASE_URL present? false DATABASE_URL present? true db host: ep-plain-sound-ah0xldj7-pooler.c-3.us-east-1.aws.neon.tech
+Prisma signup error: Skipping Prisma on this platform
+pg: emailRes.rowCount -> 0
+Signup persistence: pg-fallback
+ POST /api/auth/signup 201 in 1079ms (compile: 110ms, render: 969ms)

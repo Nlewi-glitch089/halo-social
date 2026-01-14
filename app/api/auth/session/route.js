@@ -3,7 +3,7 @@ import { cookies as nextCookies } from 'next/headers'
 
 export async function GET() {
   try {
-    const cookieStore = typeof nextCookies === 'function' ? nextCookies() : nextCookies
+    const cookieStore = typeof nextCookies === 'function' ? await nextCookies() : nextCookies
     let hasToken = false
     if (cookieStore) {
       if (typeof cookieStore.get === 'function') {
@@ -27,10 +27,13 @@ export async function GET() {
         } catch (e) {
           // ignore and try in-memory below
         }
-        // Fallback: check in-memory tokens map (dev)
+        // Fallback: check in-memory tokens map (dev) when no DATABASE_URL is configured
         try {
-          const tokens = global.__halo_tokens ||= new Map()
-          if (tokens.get(cookieVal)) return NextResponse.json({ signedIn: true })
+          const poolUrl = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL
+          if (!poolUrl) {
+            const tokens = global.__halo_tokens ||= new Map()
+            if (tokens.get(cookieVal)) return NextResponse.json({ signedIn: true })
+          }
         } catch (e) {}
       }
     }
