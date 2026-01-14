@@ -1,0 +1,41 @@
+{
+  "name": "halo-social",
+  "version": "1.0.0",
+  "description": "**Due Date**: All submissions must be submitted from your own repo by **Thursday January 9th at 11:59pm in GitHub Classroom**.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "prisma:generate": "npx prisma generate",
+    "migrate:dev": "npx prisma migrate dev --name init",
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nlewi-glitch089/halo-social.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Nlewi-glitch089/halo-social/issues"
+  },
+  "homepage": "https://github.com/Nlewi-glitch089/halo-social#readme",
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
+    "@prisma/adapter-neon": "^7.2.0",
+    "@prisma/client": "^7.2.0",
+    "next": "^16.1.1",
+    "openai": "^6.15.0",
+    "pg": "^8.16.3",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "prisma": "^7.2.0",
+    "vitest": "^4.0.16"
+  }
+}

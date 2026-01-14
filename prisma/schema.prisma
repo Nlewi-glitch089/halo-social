@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model PublishedImage {
+  id        Int      @id @default(autoincrement())
+  imageUrl  String   @map("image_url")
+  prompt    String
+  hearts    Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("published_images")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String   @default("")
+  username  String   @unique
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  tokens    Token[]
+
+  @@map("users")
+}
+
+model Token {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("tokens")
+}
